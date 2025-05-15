@@ -64,6 +64,7 @@ async function endGame() {
 
   UI.finalScore.innerText = 'Your score: ' + score;
   UI.gameOverScreen.style.display = 'flex';
+  UI.highScoreList.style.display = 'block';
 
   if (scoreManager.isTopScore(score)) {
     UI.nameInput.style.display = 'block';

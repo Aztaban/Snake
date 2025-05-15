@@ -13,6 +13,7 @@ export function hideScreens() {
   UI.startScreen.style.display = 'none';
   UI.gameOverScreen.style.display = 'none';
   UI.nameInput.style.display = 'none';
+  UI.highScoreList.style.display = 'none';
 }
 
 export function updateScoreDisplay(score, currentHighScore) {

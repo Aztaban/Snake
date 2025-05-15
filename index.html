@@ -16,7 +16,7 @@
     </div>
 
     <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <div id="highScoreList"></div>
+
     <div id="mobileControls">
       <div class="row">
         <button onclick="changeDirection('UP')">⬆️</button>
@@ -30,11 +30,13 @@
 
     <div id="startScreen" class="overlay">
       <h1>Welcome to Snake Game</h1>
+      <div id="highScoreList"></div>
       <button onclick="startGame()">Start Game</button>
     </div>
 
     <div id="gameOverScreen" class="overlay" style="display: none">
       <h1>Game Over!</h1>
+      <div id="highScoreList"></div>
       <p id="finalScore"></p>
 
       <div id="nameInputSection" style="display: none; margin-top: 10px">
