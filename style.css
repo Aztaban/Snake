@@ -111,3 +111,33 @@ button {
 #nameInputSection button:hover {
   background-color: #0c0;
 }
+
+#mobileControls {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#mobileControls .row {
+  margin: 5px;
+}
+
+#mobileControls button {
+  font-size: 24px;
+  padding: 10px 20px;
+  margin: 4px;
+  border: none;
+  background: #0f0;
+  color: #000;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#mobileControls button:hover {
+  background: #0c0;
+}
+
+@media (min-width: 768px) {
+  #mobileControls {
+    display: none;
+  }
+}
