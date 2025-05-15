@@ -125,4 +125,3 @@ function startGame() {
 window.startGame = startGame;
 window.restartGame = startGame;
 window.submitHighScore = submitHighScore;
-window.changeDirection = changeDirection;
