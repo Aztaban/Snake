@@ -2,6 +2,7 @@ import { Snake } from './snake.js';
 import { generateFood } from './utils.js';
 import { initializeControls } from './controls.js';
 import { HighScoreManager } from './highScoreManager.js';
+import { UI, hideScreens, updateScoreDisplay } from './ui.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -48,47 +49,33 @@ function draw() {
 
   // Draw snake and UI
   snake.draw(ctx);
-  updateScoreDisplay();
+  updateScoreDisplay(score, highScore);
   directionFlag.value = false;
-}
-
-function updateScoreDisplay() {
-  document.getElementById('score').innerText = 'Score: ' + score;
-  if (score > highScore) {
-    highScore = score;
-    document.getElementById('highScore').innerText = 'High Score: ' + highScore;
-  }
-}
-
-function hideScreens() {
-  document.getElementById('startScreen').style.display = 'none';
-  document.getElementById('gameOverScreen').style.display = 'none';
-  document.getElementById('nameInputSection').style.display = 'none';
 }
 
 async function endGame() {
   clearInterval(game);
   scoreManager.pendingScore = score;
 
-  document.getElementById('finalScore').innerText = 'Your score: ' + score;
-  document.getElementById('gameOverScreen').style.display = 'flex';
+  UI.finalScore.innerText = 'Your score: ' + score;
+  UI.gameOverScreen.style.display = 'flex';
 
   if (scoreManager.isHighScore(score)) {
-    document.getElementById('nameInputSection').style.display = 'block';
+    UI.nameInput.style.display = 'block';
   } else {
-    await scoreManager.display(document.getElementById('highScoreList'));
+    await scoreManager.display(UI.highScoreList);
   }
 }
 
 async function submitHighScore() {
-  const input = document.getElementById('playerName');
+  const input = UI.playerNameInput;
   const name = input.value.trim().substring(0, 8).toUpperCase();
   if (!name) return;
 
   await scoreManager.submit(name);
-  await scoreManager.display(document.getElementById('highScoreList'), name, scoreManager.pendingScore);
+  await scoreManager.display(UI.highScoreList, name, scoreManager.pendingScore);
 
-  document.getElementById('nameInputSection').style.display = 'none';
+  UI.nameInput.style.display = 'none';
 }
 
 async function startGame() {
