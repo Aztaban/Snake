@@ -6,6 +6,7 @@ export function generateFood(box, width, height) {
 }
 
 export function isHighScore(score, scores) {
+  if (scores.length < 10) return true;
   return scores.length < 10 || score > Math.min(...scores.map((s) => s.score));
 }
 
