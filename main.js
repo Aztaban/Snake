@@ -68,7 +68,8 @@ async function endGame() {
   scoreManager.setDisplayElement(UI.gameOverScoreList);
 
   const isTop = scoreManager.isTopScore(score);
-  UI.gameOverTitle.innerText = isTop ? '🎉 New High Score! 🎉' : 'Game Over!';
+  const isMobile = window.innerWidth < 400;
+  UI.gameOverTitle.innerText = isTop ? (isMobile ? 'New High Score!' : '🎉 New High Score! 🎉') : 'Game Over!';
   UI.gameOverTitle.className = isTop ? 'highlight-title' : '';
 
   if (isTop) {

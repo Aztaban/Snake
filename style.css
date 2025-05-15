@@ -5,6 +5,7 @@ body {
   justify-content: center;
   height: 100vh;
   margin: 0;
+  padding: 0;
   background-color: #000;
 }
 
@@ -59,6 +60,23 @@ canvas {
   font-family: monospace;
   font-size: 24px;
   z-index: 10;
+  padding: 1rem; /* add spacing on small screens */
+  box-sizing: border-box;
+  text-align: center; /* ensure text is centered */
+}
+
+.overlay h1 {
+  font-size: clamp(1.5rem, 5vw, 3rem); /* responsive from 1.5rem to 3rem */
+  text-align: center;
+  white-space: nowrap; /* prevents it from breaking into two lines */
+  overflow: hidden;
+  text-overflow: ellipsis; /* optional: adds "..." if still overflows */
+}
+
+.overlay h1,
+.overlay button {
+  max-width: 90%;
+  margin: 0.5rem auto;
 }
 
 button {
