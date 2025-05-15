@@ -60,7 +60,7 @@ function updateScoreDisplay() {
   }
 }
 
-async function displayHighScores() {
+async function displayHighScores(playerName = null, playerScore = null) {
   const scores = await fetchGlobalHighScores();
   const list = scores
     .map((s) => {
