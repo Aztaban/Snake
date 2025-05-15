@@ -46,7 +46,7 @@ export class HighScoreManager {
 
     const scores = await fetchGlobalHighScores();
     this.scores = scores;
-
+    console.log('Fetched scores:', scores);
     const list = scores
       .map((s) => {
         const isPlayer = playerName && s.name === playerName && s.score === playerScore;
