@@ -7,6 +7,7 @@ export const UI = {
   playerNameInput: document.getElementById('playerName'),
   scoreDisplay: document.getElementById('score'),
   highScoreDisplay: document.getElementById('highScore'),
+  gameOverScoreList: document.getElementById('gameOverScoreList'),
 };
 
 export function hideScreens() {

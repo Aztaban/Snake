@@ -64,11 +64,14 @@ async function endGame() {
 
   UI.finalScore.innerText = 'Your score: ' + score;
   UI.gameOverScreen.style.display = 'flex';
-  UI.highScoreList.style.display = 'block';
+  UI.gameOverScoreList.style.display = 'block';
+
+  scoreManager.setDisplayElement(UI.gameOverScoreList);
 
   if (scoreManager.isTopScore(score)) {
     UI.nameInput.style.display = 'block';
   } else {
+    scoreManager.setDisplayElement(UI.gameOverScoreList);
     await scoreManager.display();
   }
 }
@@ -79,6 +82,7 @@ async function submitHighScore() {
   if (!name) return;
 
   await scoreManager.submit(name);
+  scoreManager.setDisplayElement(UI.gameOverScoreList);
   await scoreManager.display(name, scoreManager.pendingScore);
 
   UI.nameInput.style.display = 'none';
@@ -89,6 +93,7 @@ async function startGame() {
   hideScreens();
 
   await scoreManager.load();
+  scoreManager.setDisplayElement(UI.highScoreList);
   await scoreManager.display();
 
   resetGame();

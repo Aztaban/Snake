@@ -49,7 +49,7 @@ export class HighScoreManager {
     console.log('Fetched scores:', scores);
     const list = scores
       .map((s) => {
-        const isPlayer = playerName && s.name === playerName && s.score === playerScore;
+        const isPlayer = playerName && s.name.toUpperCase() === playerName.toUpperCase() && s.score === playerScore;
         const style = isPlayer ? ' style="font-weight:bold; color:#fff; background:#0a0;"' : '';
         return `<li${style}>${s.name} - ${s.score}</li>`;
       })
