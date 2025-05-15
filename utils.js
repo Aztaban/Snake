@@ -5,11 +5,6 @@ export function generateFood(box, width, height) {
   };
 }
 
-export function isHighScore(score, highScores) {
-  if (highScores.length < 10) return true;
-  return score > highScores[highScores.length - 1].score;
-}
-
 export function updateHighScores(scores, name, score) {
   scores.push({ name, score });
   scores.sort((a, b) => b.score - a.score);
