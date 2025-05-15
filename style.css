@@ -11,6 +11,9 @@ body {
 canvas {
   background-color: #111;
   border: 2px solid #0f0;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
 }
 
 #score {
@@ -24,11 +27,13 @@ canvas {
 #scoreBar {
   display: flex;
   justify-content: space-between;
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   margin: 0 auto 10px auto;
   color: #0f0;
   font-family: monospace;
   font-size: 18px;
+  padding: 0 10px;
 }
 
 #highscore {
