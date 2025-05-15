@@ -11,7 +11,7 @@ let snake,
   food,
   score,
   highScore = 0,
-  highScores,
+  highScores = [],
   game;
 
 let directionChanged = false;
@@ -65,6 +65,8 @@ function updateScoreDisplay() {
 
 async function displayHighScores(playerName = null, playerScore = null) {
   const scores = await fetchGlobalHighScores();
+  highScores = scores; // ✅ Update local reference
+
   const list = scores
     .map((s) => {
       const isPlayer = playerName && s.name === playerName && s.score === playerScore;
@@ -72,6 +74,7 @@ async function displayHighScores(playerName = null, playerScore = null) {
       return `<li${style}>${s.name} - ${s.score}</li>`;
     })
     .join('');
+
   document.getElementById('highScoreList').innerHTML = `
     <h3>Top 10 High Scores</h3>
     <ol>${list}</ol>
