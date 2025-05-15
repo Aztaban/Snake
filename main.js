@@ -107,6 +107,7 @@ document.addEventListener('keydown', (e) => {
 function startGame() {
   clearInterval(game);
   document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameOverScreen').style.display = 'none';
   highScores = JSON.parse(localStorage.getItem('snakeHighScores')) || [];
   resetGame();
   game = setInterval(draw, 100);
