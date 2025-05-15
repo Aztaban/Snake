@@ -60,10 +60,10 @@ async function endGame() {
   UI.finalScore.innerText = 'Your score: ' + score;
   UI.gameOverScreen.style.display = 'flex';
 
-  if (scoreManager.isHighScore(score)) {
+  if (scoreManager.isTopScore(score)) {
     UI.nameInput.style.display = 'block';
   } else {
-    await scoreManager.display(UI.highScoreList);
+    await scoreManager.display();
   }
 }
 
@@ -73,7 +73,7 @@ async function submitHighScore() {
   if (!name) return;
 
   await scoreManager.submit(name);
-  await scoreManager.display(UI.highScoreList, name, scoreManager.pendingScore);
+  await scoreManager.display(name, scoreManager.pendingScore);
 
   UI.nameInput.style.display = 'none';
 }

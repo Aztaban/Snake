@@ -1,11 +1,13 @@
 import { fetchGlobalHighScores, submitHighScore as submitToAPI } from './apiClient.js';
 import { updateHighScores } from './utils.js';
+import { UI } from './ui.js';
 
 export class HighScoreManager {
   constructor(storageKey = 'snakeHighScores') {
     this.storageKey = storageKey;
     this.scores = [];
     this.pendingScore = null;
+    this.displayElement = UI.highScoreList;
   }
 
   async load() {
@@ -23,18 +25,25 @@ export class HighScoreManager {
     }
   }
 
-  isHighScore(score) {
+  isTopScore(score) {
     const sorted = [...this.scores].sort((a, b) => b.score - a.score);
     return sorted.length < 10 || score > sorted[sorted.length - 1].score;
   }
 
-  async submit(name, score) {
-    this.scores = updateHighScores(this.scores, name, score);
-    localStorage.setItem(this.storageKey, JSON.stringify(this.scores));
-    await submitToAPI(name, score);
+  setDisplayElement(el) {
+    this.displayElement = el;
   }
 
-  async display(targetEl, playerName = null, playerScore = null) {
+  async submit(name) {
+    this.scores = updateHighScores(this.scores, name, this.pendingScore);
+    localStorage.setItem(this.storageKey, JSON.stringify(this.scores));
+    await submitToAPI(name, this.pendingScore);
+  }
+
+  async display(playerName = null, playerScore = null) {
+    const targetEl = this.displayElement;
+    if (!targetEl) return console.warn('No display element set for HighScoreManager.');
+
     const scores = await fetchGlobalHighScores();
     this.scores = scores;
 
