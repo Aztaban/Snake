@@ -87,10 +87,15 @@ async function endGame() {
   const isTopScore = isHighScore(score, highScores);
   pendingScore = score;
 
+  console.log('HighScores:', highScores);
+  console.log('Score:', score);
+  console.log('Is High Score:', isTopScore);
+
   document.getElementById('finalScore').innerText = 'Your score: ' + score;
   document.getElementById('gameOverScreen').style.display = 'flex';
 
   if (isTopScore) {
+    console.log('Showing name input...');
     document.getElementById('nameInputSection').style.display = 'block';
   } else {
     await displayHighScores();
