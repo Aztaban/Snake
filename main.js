@@ -1,6 +1,6 @@
 import { Snake } from './snake.js';
 import { generateFood, isHighScore, updateHighScores } from './utils.js';
-import { fetchGlobalHighScores, submitHighScore } from './api/apiClient.js';
+import { fetchGlobalHighScores, submitHighScore } from './apiClient.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
