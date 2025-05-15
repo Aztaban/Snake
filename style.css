@@ -141,6 +141,20 @@ button {
   background: #0c0;
 }
 
+.highlight-title {
+  color: #00ff00;
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
 @media (min-width: 768px) {
   #mobileControls {
     display: none;

@@ -65,13 +65,15 @@ async function endGame() {
   UI.finalScore.innerText = 'Your score: ' + score;
   UI.gameOverScreen.style.display = 'flex';
   UI.gameOverScoreList.style.display = 'block';
-
   scoreManager.setDisplayElement(UI.gameOverScoreList);
 
-  if (scoreManager.isTopScore(score)) {
+  const isTop = scoreManager.isTopScore(score);
+  UI.gameOverTitle.innerText = isTop ? '🎉 New High Score! 🎉' : 'Game Over!';
+  UI.gameOverTitle.className = isTop ? 'highlight-title' : '';
+
+  if (isTop) {
     UI.nameInput.style.display = 'block';
   } else {
-    scoreManager.setDisplayElement(UI.gameOverScoreList);
     await scoreManager.display();
   }
 }
