@@ -1,8 +1,8 @@
-import { Snake } from './snake.js';
-import { generateFood } from './utils.js';
-import { initializeControls } from './controls.js';
-import { HighScoreManager } from './highScoreManager.js';
-import { UI, hideScreens, updateScoreDisplay } from './ui.js';
+import { Snake } from './game/snake.js';
+import { generateFood } from './ui/utils.js';
+import { initializeControls } from './game/controls.js';
+import { HighScoreManager } from './game/highScoreManager.js';
+import { UI, hideScreens, updateScoreDisplay } from './ui/ui.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');

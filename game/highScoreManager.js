@@ -1,6 +1,6 @@
-import { fetchGlobalHighScores, submitHighScore as submitToAPI } from './apiClient.js';
-import { updateHighScores } from './utils.js';
-import { UI } from './ui.js';
+import { fetchGlobalHighScores, submitHighScore as submitToAPI } from '../apiClient.js';
+import { updateHighScores } from '../ui/utils.js';
+import { UI } from '../ui/ui.js';
 
 export class HighScoreManager {
   constructor(storageKey = 'snakeHighScores') {
