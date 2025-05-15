@@ -17,6 +17,11 @@ let snake,
 const directionFlag = { value: false };
 const scoreManager = new HighScoreManager();
 
+window.addEventListener('DOMContentLoaded', async () => {
+  await scoreManager.load();
+  await scoreManager.display(); // shows on initial load
+});
+
 function resetGame() {
   snake = new Snake(9 * box, 9 * box, box, canvas.width, canvas.height);
   food = generateFood(box, canvas.width, canvas.height);
@@ -83,6 +88,8 @@ async function startGame() {
   hideScreens();
 
   await scoreManager.load();
+  await scoreManager.display();
+
   resetGame();
   initializeControls(snake, canvas, directionFlag);
   game = setInterval(draw, 100);

@@ -75,7 +75,7 @@ button {
   color: #0f0;
   font-family: monospace;
   font-size: 16px;
-  margin-top: 20px;
+  text-align: center;
 }
 
 #nameInputSection {
