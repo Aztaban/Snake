@@ -1,40 +1,56 @@
-export function setupKeyboardControls(snake, directionChangedRef) {
+let directionFlag;
+let snakeRef;
+
+export function initializeControls(snakeInstance, canvas, externalFlag) {
+  directionFlag = externalFlag;
+  snakeRef = snakeInstance;
+
+  setupKeyboardControls();
+  setupTouchControls(canvas);
+  setupButtonControls();
+}
+
+function setDirectionIfAllowed(dir) {
+  if (!directionFlag.value) {
+    snakeRef.setDirection(dir);
+    directionFlag.value = true;
+  }
+}
+
+function setupKeyboardControls() {
   document.addEventListener('keydown', (e) => {
-    if (!directionChangedRef.value) {
-      const dir = e.key.replace('Arrow', '').toUpperCase();
-      snake.setDirection(dir);
-      directionChangedRef.value = true;
-    }
+    const dir = e.key.replace('Arrow', '').toUpperCase();
+    setDirectionIfAllowed(dir);
   });
 }
 
-export function setupTouchControls(canvas, onDirectionChange) {
-  let touchStartX = 0;
-  let touchStartY = 0;
+function setupTouchControls(canvas) {
+  let startX = 0,
+    startY = 0;
 
   canvas.addEventListener('touchstart', (e) => {
     const touch = e.touches[0];
-    touchStartX = touch.clientX;
-    touchStartY = touch.clientY;
+    startX = touch.clientX;
+    startY = touch.clientY;
   });
 
   canvas.addEventListener('touchend', (e) => {
     const touch = e.changedTouches[0];
-    const dx = touch.clientX - touchStartX;
-    const dy = touch.clientY - touchStartY;
+    const dx = touch.clientX - startX;
+    const dy = touch.clientY - startY;
 
     if (Math.abs(dx) > Math.abs(dy)) {
-      if (dx > 30) onDirectionChange('RIGHT');
-      if (dx < -30) onDirectionChange('LEFT');
+      if (dx > 30) setDirectionIfAllowed('RIGHT');
+      if (dx < -30) setDirectionIfAllowed('LEFT');
     } else {
-      if (dy > 30) onDirectionChange('DOWN');
-      if (dy < -30) onDirectionChange('UP');
+      if (dy > 30) setDirectionIfAllowed('DOWN');
+      if (dy < -30) setDirectionIfAllowed('UP');
     }
   });
 }
 
-export function setupButtonControls(onDirectionChange) {
-  window.changeDirection = function (dir) {
-    onDirectionChange(dir);
+function setupButtonControls() {
+  window.changeDirection = (dir) => {
+    setDirectionIfAllowed(dir);
   };
 }

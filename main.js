@@ -1,6 +1,7 @@
 import { Snake } from './snake.js';
 import { generateFood, isHighScore, updateHighScores } from './utils.js';
 import { fetchGlobalHighScores, submitHighScore as submitHighScoreToAPI } from './apiClient.js';
+import { initializeControls } from './controls.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -15,6 +16,7 @@ let snake,
 
 let directionChanged = false;
 let pendingScore = null;
+const directionFlag = { value: false };
 
 function resetGame() {
   snake = new Snake(9 * box, 9 * box, box, canvas.width, canvas.height);
@@ -50,6 +52,7 @@ function draw() {
   snake.draw(ctx);
   updateScoreDisplay();
   directionChanged = false;
+  directionFlag.value = false;
 }
 
 function updateScoreDisplay() {
@@ -105,21 +108,6 @@ async function submitHighScore() {
   document.getElementById('nameInputSection').style.display = 'none';
 }
 
-document.addEventListener('keydown', (e) => {
-  if (!directionChanged) {
-    const dir = e.key.replace('Arrow', '').toUpperCase();
-    snake.setDirection(dir);
-    directionChanged = true;
-  }
-});
-
-function changeDirection(dir) {
-  if (!directionChanged) {
-    snake.setDirection(dir);
-    directionChanged = true;
-  }
-}
-
 function startGame() {
   clearInterval(game);
   document.getElementById('startScreen').style.display = 'none';
@@ -127,6 +115,10 @@ function startGame() {
   document.getElementById('nameInputSection').style.display = 'none';
   highScores = JSON.parse(localStorage.getItem('snakeHighScores')) || [];
   resetGame();
+
+  // Setup controls
+  initializeControls(snake, canvas, directionFlag);
+
   game = setInterval(draw, 100);
 }
 
