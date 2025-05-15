@@ -80,7 +80,7 @@ async function displayHighScores(playerName = null, playerScore = null) {
 
 async function endGame() {
   clearInterval(game);
-
+  highScores.sort((a, b) => b.score - a.score);
   const isTopScore = isHighScore(score, highScores);
   pendingScore = score;
 
