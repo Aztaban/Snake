@@ -1,7 +1,7 @@
 import { Snake } from './snake.js';
-import { generateFood, isHighScore, updateHighScores } from './utils.js';
-import { fetchGlobalHighScores, submitHighScore as submitHighScoreToAPI } from './apiClient.js';
+import { generateFood } from './utils.js';
 import { initializeControls } from './controls.js';
+import { HighScoreManager } from './highScoreManager.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -11,22 +11,20 @@ let snake,
   food,
   score,
   highScore = 0,
-  highScores = [],
   game;
 
-let directionChanged = false;
-let pendingScore = null;
 const directionFlag = { value: false };
+const scoreManager = new HighScoreManager();
 
 function resetGame() {
   snake = new Snake(9 * box, 9 * box, box, canvas.width, canvas.height);
   food = generateFood(box, canvas.width, canvas.height);
   score = 0;
-  directionChanged = false;
 }
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   // Draw food
   ctx.fillStyle = 'red';
   ctx.fillRect(food.x, food.y, box, box);
@@ -51,7 +49,6 @@ function draw() {
   // Draw snake and UI
   snake.draw(ctx);
   updateScoreDisplay();
-  directionChanged = false;
   directionFlag.value = false;
 }
 
@@ -63,42 +60,23 @@ function updateScoreDisplay() {
   }
 }
 
-async function displayHighScores(playerName = null, playerScore = null) {
-  const scores = await fetchGlobalHighScores();
-  highScores = scores; // ✅ Update local reference
-
-  const list = scores
-    .map((s) => {
-      const isPlayer = playerName && s.name === playerName && s.score === playerScore;
-      const style = isPlayer ? ' style="font-weight:bold; color:#fff; background:#0a0;"' : '';
-      return `<li${style}>${s.name} - ${s.score}</li>`;
-    })
-    .join('');
-
-  document.getElementById('highScoreList').innerHTML = `
-    <h3>Top 10 High Scores</h3>
-    <ol>${list}</ol>
-  `;
+function hideScreens() {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameOverScreen').style.display = 'none';
+  document.getElementById('nameInputSection').style.display = 'none';
 }
 
 async function endGame() {
   clearInterval(game);
-  highScores.sort((a, b) => b.score - a.score);
-  const isTopScore = isHighScore(score, highScores);
-  pendingScore = score;
-
-  console.log('HighScores:', highScores);
-  console.log('Score:', score);
-  console.log('Is High Score:', isTopScore);
+  scoreManager.pendingScore = score;
 
   document.getElementById('finalScore').innerText = 'Your score: ' + score;
   document.getElementById('gameOverScreen').style.display = 'flex';
 
-  if (isTopScore) {
-    console.log('Showing name input...');
+  if (scoreManager.isHighScore(score)) {
     document.getElementById('nameInputSection').style.display = 'block';
   } else {
-    await displayHighScores();
+    await scoreManager.display(document.getElementById('highScoreList'));
   }
 }
 
@@ -107,26 +85,19 @@ async function submitHighScore() {
   const name = input.value.trim().substring(0, 8).toUpperCase();
   if (!name) return;
 
-  highScores = updateHighScores(highScores, name, pendingScore);
-  localStorage.setItem('snakeHighScores', JSON.stringify(highScores));
-
-  await submitHighScoreToAPI(name, pendingScore);
-  await displayHighScores(name, pendingScore);
+  await scoreManager.submit(name);
+  await scoreManager.display(document.getElementById('highScoreList'), name, scoreManager.pendingScore);
 
   document.getElementById('nameInputSection').style.display = 'none';
 }
 
-function startGame() {
+async function startGame() {
   clearInterval(game);
-  document.getElementById('startScreen').style.display = 'none';
-  document.getElementById('gameOverScreen').style.display = 'none';
-  document.getElementById('nameInputSection').style.display = 'none';
-  highScores = JSON.parse(localStorage.getItem('snakeHighScores')) || [];
+  hideScreens();
+
+  await scoreManager.load();
   resetGame();
-
-  // Setup controls
   initializeControls(snake, canvas, directionFlag);
-
   game = setInterval(draw, 100);
 }
 
