@@ -22,6 +22,14 @@
       <h1>Game Over!</h1>
       <p id="finalScore"></p>
       <div id="highScoreList"></div>
+      <div id="nameInputSection" style="display: none; margin-top: 10px">
+        <label for="playerName">Your Name (8 chars max):</label>
+        <br />
+        <input type="text" id="playerName" maxlength="8" />
+        <br />
+        <button onclick="submitHighScore()">Submit Score</button>
+      </div>
+
       <button onclick="restartGame()">Restart</button>
     </div>
   </body>

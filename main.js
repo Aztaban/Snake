@@ -14,6 +14,7 @@ let snake,
   game;
 
 let directionChanged = false;
+let pendingScore = null;
 
 function resetGame() {
   snake = new Snake(9 * box, 9 * box, box, canvas.width, canvas.height);
@@ -24,8 +25,7 @@ function resetGame() {
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Food
+  // Draw food
   ctx.fillStyle = 'red';
   ctx.fillRect(food.x, food.y, box, box);
 
@@ -78,22 +78,31 @@ async function displayHighScores(playerName = null, playerScore = null) {
 async function endGame() {
   clearInterval(game);
 
-  let name = null;
-
-  if (isHighScore(score, highScores)) {
-    name = prompt('New High Score! Enter your name (max 8 characters):').substring(0, 8).toUpperCase();
-
-    // Update personal high score
-    highScores = updateHighScores(highScores, name, score);
-    localStorage.setItem('snakeHighScores', JSON.stringify(highScores));
-
-    await submitHighScore(name, score);
-  }
-
-  displayHighScores(name, score);
+  const isTopScore = isHighScore(score, highScores);
+  pendingScore = score;
 
   document.getElementById('finalScore').innerText = 'Your score: ' + score;
   document.getElementById('gameOverScreen').style.display = 'flex';
+
+  if (isTopScore) {
+    document.getElementById('nameInputSection').style.display = 'block';
+  } else {
+    await displayHighScores();
+  }
+}
+
+async function submitHighScore() {
+  const input = document.getElementById('playerName');
+  const name = input.value.trim().substring(0, 8).toUpperCase();
+  if (!name) return;
+
+  highScores = updateHighScores(highScores, name, pendingScore);
+  localStorage.setItem('snakeHighScores', JSON.stringify(highScores));
+
+  await submitHighScoreToAPI(name, pendingScore);
+  await displayHighScores(name, pendingScore);
+
+  document.getElementById('nameInputSection').style.display = 'none';
 }
 
 document.addEventListener('keydown', (e) => {
@@ -108,6 +117,7 @@ function startGame() {
   clearInterval(game);
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('gameOverScreen').style.display = 'none';
+  document.getElementById('nameInputSection').style.display = 'none';
   highScores = JSON.parse(localStorage.getItem('snakeHighScores')) || [];
   resetGame();
   game = setInterval(draw, 100);
@@ -115,3 +125,4 @@ function startGame() {
 
 window.startGame = startGame;
 window.restartGame = startGame;
+window.submitHighScore = submitHighScore;
