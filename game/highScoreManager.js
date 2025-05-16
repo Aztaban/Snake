@@ -1,3 +1,4 @@
+import { fetchGlobalHighScores, submitHighScore } from '../apiClient.js';
 import { updateHighScores } from '../ui/utils.js';
 import { UI } from '../ui/ui.js';
 
@@ -14,9 +15,8 @@ export class HighScoreManager {
     this.scores = Array.isArray(local) ? local : [];
 
     try {
-      const response = await fetch('/api/handler');
-      const global = await response.json();
-      if (Array.isArray(global) && global.length > 0) {
+      const global = await fetchGlobalHighScores();
+      if (global.length > 0) {
         this.scores = global;
         localStorage.setItem(this.storageKey, JSON.stringify(global));
       }
@@ -44,18 +44,15 @@ export class HighScoreManager {
       return;
     }
 
-    try {
-      const response = await fetch('/api/handler', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, score: this.pendingScore }),
-      });
+    const score = this.pendingScore;
+    this.pendingScore = null;
 
-      const updatedScores = await response.json();
-      this.scores = updateHighScores(updatedScores, name, this.pendingScore);
+    try {
+      this.scores = await submitHighScore(name, score);
       localStorage.setItem(this.storageKey, JSON.stringify(this.scores));
     } catch (err) {
-      console.error('Failed to submit score to server:', err);
+      console.error('Score submission failed:', err);
+      this.pendingScore = score;
     }
   }
   async display(playerName = null, playerScore = null) {
@@ -63,8 +60,7 @@ export class HighScoreManager {
     if (!targetEl) return console.warn('No display element set for HighScoreManager.');
 
     try {
-      const response = await fetch('/api/handler');
-      const scores = await response.json();
+      const scores = await fetchGlobalHighScores();
       this.scores = scores;
 
       const list = scores
