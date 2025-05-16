@@ -1,81 +1,22 @@
-import { Snake } from './game/snake.js';
-import { initializeControls } from './game/controls.js';
-import { HighScoreManager } from './game/highScoreManager.js';
-import { UI, hideScreens, updateScoreDisplay } from './ui/ui.js';
+import { HighScoreManager } from './game/HighScoreManager.js';
+import { UI, hideScreens } from './ui/ui.js';
+import { Game } from './game/Game.js';
 
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const box = 20;
-
-let snake,
-  food,
-  score,
-  highScore = 0,
-  game;
-
-const directionFlag = { value: false };
 const scoreManager = new HighScoreManager();
+const game = new Game('gameCanvas', 20, scoreManager);
 
 window.addEventListener('DOMContentLoaded', async () => {
   await scoreManager.load();
-  await scoreManager.display(); // shows on initial load
+  await scoreManager.display(); // shows scores on home screen
 });
 
-function resetGame() {
-  snake = new Snake(9 * box, 9 * box, box, canvas.width, canvas.height);
-  food = snake.generateFood();
-  score = 0;
-}
+async function startGame() {
+  hideScreens();
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Draw food
-  ctx.fillStyle = 'red';
-  ctx.fillRect(food.x, food.y, box, box);
-
-  // Move snake
-  snake.move();
-
-  // Collision
-  if (snake.checkCollision()) {
-    endGame();
-    return;
-  }
-
-  // Eat food
-  if (snake.head.x === food.x && snake.head.y === food.y) {
-    score += 100;
-    food = snake.generateFood();
-  } else {
-    snake.shrink();
-  }
-
-  // Draw snake and UI
-  snake.draw(ctx);
-  updateScoreDisplay(score, highScore);
-  directionFlag.value = false;
-}
-
-async function endGame() {
-  clearInterval(game);
-  scoreManager.pendingScore = score;
-
-  UI.finalScore.innerText = 'Your score: ' + score;
-  UI.gameOverScreen.style.display = 'flex';
-  UI.gameOverScoreList.style.display = 'block';
-  scoreManager.setDisplayElement(UI.gameOverScoreList);
-
-  const isTop = scoreManager.isTopScore(score);
-  const isMobile = window.innerWidth < 400;
-  UI.gameOverTitle.innerText = isTop ? (isMobile ? 'New High Score!' : '🎉 New High Score! 🎉') : 'Game Over!';
-  UI.gameOverTitle.className = isTop ? 'highlight-title' : '';
-
-  if (isTop) {
-    UI.nameInput.style.display = 'block';
-  } else {
-    await scoreManager.display(name, score);
-  }
+  await scoreManager.load();
+  scoreManager.setDisplayElement(UI.highScoreList);
+  await scoreManager.display();
+  game.start();
 }
 
 async function submitHighScore() {
@@ -88,19 +29,6 @@ async function submitHighScore() {
   await scoreManager.display(name, scoreManager.pendingScore);
 
   UI.nameInput.style.display = 'none';
-}
-
-async function startGame() {
-  clearInterval(game);
-  hideScreens();
-
-  await scoreManager.load();
-  scoreManager.setDisplayElement(UI.highScoreList);
-  await scoreManager.display();
-
-  resetGame();
-  initializeControls(snake, canvas, directionFlag);
-  game = setInterval(draw, 100);
 }
 
 window.startGame = startGame;
