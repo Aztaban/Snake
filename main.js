@@ -1,5 +1,5 @@
 import { HighScoreManager } from './game/HighScoreManager.js';
-import { UI, hideScreens } from './ui/ui.js';
+import { UI, hideScreens, showStartScreenScores, showGameOverScores } from './ui/ui.js';
 import { Game } from './game/Game.js';
 
 const scoreManager = new HighScoreManager();
@@ -12,10 +12,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 async function startGame() {
   hideScreens();
-
   await scoreManager.load();
-  scoreManager.setDisplayElement(UI.highScoreList);
-  await scoreManager.display();
+  await showStartScreenScores(scoreManager);
   game.start();
 }
 
@@ -24,9 +22,10 @@ async function submitHighScore() {
   const name = input.value.trim().substring(0, 8).toUpperCase();
   if (!name) return;
 
+  const score = scoreManager.pendingScore;
   await scoreManager.submit(name);
-  scoreManager.setDisplayElement(UI.gameOverScoreList);
-  await scoreManager.display(name, scoreManager.pendingScore);
+
+  await showGameOverScores(scoreManager, name, score);
 
   UI.nameInput.style.display = 'none';
 }

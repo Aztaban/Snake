@@ -24,3 +24,15 @@ export function updateScoreDisplay(score, currentHighScore) {
     UI.highScoreDisplay.innerText = 'High Score: ' + score;
   }
 }
+
+export function showStartScreenScores(scoreManager) {
+  scoreManager.setDisplayElement(UI.highScoreList);
+  UI.highScoreList.style.display = 'block';
+  return scoreManager.display();
+}
+
+export function showGameOverScores(scoreManager, name, score) {
+  scoreManager.setDisplayElement(UI.gameOverScoreList);
+  UI.gameOverScoreList.style.display = 'block';
+  return scoreManager.display(name, score);
+}
