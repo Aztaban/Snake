@@ -1,5 +1,4 @@
 import { Snake } from './game/snake.js';
-import { generateFood } from './ui/utils.js';
 import { initializeControls } from './game/controls.js';
 import { HighScoreManager } from './game/highScoreManager.js';
 import { UI, hideScreens, updateScoreDisplay } from './ui/ui.js';
@@ -24,7 +23,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 function resetGame() {
   snake = new Snake(9 * box, 9 * box, box, canvas.width, canvas.height);
-  food = generateFood(box, canvas.width, canvas.height);
+  food = snake.generateFood();
   score = 0;
 }
 
@@ -47,7 +46,7 @@ function draw() {
   // Eat food
   if (snake.head.x === food.x && snake.head.y === food.y) {
     score += 100;
-    food = generateFood(box, canvas.width, canvas.height);
+    food = snake.generateFood();
   } else {
     snake.shrink();
   }
@@ -75,7 +74,7 @@ async function endGame() {
   if (isTop) {
     UI.nameInput.style.display = 'block';
   } else {
-    await scoreManager.display();
+    await scoreManager.display(name, score);
   }
 }
 

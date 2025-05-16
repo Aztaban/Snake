@@ -46,6 +46,18 @@ export class Snake {
     return tail.some((segment) => segment.x === head.x && segment.y === head.y);
   }
 
+  generateFood() {
+    let position, isOnSnake;
+    do {
+      position = {
+        x: Math.floor(Math.random() * (this.canvasWidth / this.box)) * this.box,
+        y: Math.floor(Math.random() * (this.canvasHeight / this.box)) * this.box,
+      };
+      isOnSnake = this.body.some((segment) => segment.x === position.x && segment.y === position.y);
+    } while (isOnSnake);
+    return position;
+  }
+
   grow() {}
   shrink() {
     this.body.pop();
