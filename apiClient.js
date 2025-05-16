@@ -1,4 +1,4 @@
-import { addAndSortHighScores } from './ui/utils';
+import { addAndSortHighScores } from './ui/utils.js';
 
 const BIN_ID = '68269c788a456b79669ea317';
 const ACCESS_KEY = '$2a$10$2CjETQg03/ghTwpaQbXkZeHd34regxxgZxfIHkWaExfZco03WPDJG';
