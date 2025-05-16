@@ -1,3 +1,5 @@
+import { addAndSortHighScores } from './ui/utils';
+
 const BIN_ID = '68269c788a456b79669ea317';
 const ACCESS_KEY = '$2a$10$2CjETQg03/ghTwpaQbXkZeHd34regxxgZxfIHkWaExfZco03WPDJG';
 
@@ -13,18 +15,13 @@ export async function fetchGlobalHighScores() {
 }
 
 export async function submitHighScore(name, score) {
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers });
-  const data = await res.json();
-  const scores = data.record?.scores || [];
-
-  scores.push({ name, score });
-  scores.sort((a, b) => b.score - a.score);
-  const top10 = scores.slice(0, 10);
+  const scores = await fetchGlobalHighScores();
+  const updatedScores = addAndSortHighScores(scores, name, score);
 
   const updateRes = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
     method: 'PUT',
     headers,
-    body: JSON.stringify({ scores: top10 }),
+    body: JSON.stringify({ scores: updatedScores }),
   });
 
   const updateData = await updateRes.json();

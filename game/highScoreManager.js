@@ -1,4 +1,5 @@
 import { fetchGlobalHighScores, submitHighScore } from '../apiClient.js';
+import { addAndSortHighScores } from '../ui/utils.js';
 import { UI } from '../ui/ui.js';
 
 export class HighScoreManager {
@@ -24,9 +25,7 @@ export class HighScoreManager {
   }
 
   updateLocalScores(name, score) {
-    this.scores.push({ name, score });
-    this.scores.sort((a, b) => b.score - a.score);
-    this.scores = this.scores.slice(0, 10);
+    this.scores = addAndSortHighScores(this.scores, name, score);
     this.saveToLocal();
   }
 
